@@ -24,7 +24,8 @@
 // - `flow(f) === f`
 // - `pipe(x, f) === f(x)`
 
-import { unimplemented } from '../utils';
+import { flow, pipe } from 'fp-ts/lib/function';
+// import { unimplemented } from '../utils';
 
 export const isEven = (value: number) => value % 2 === 0;
 
@@ -42,19 +43,14 @@ export const not = (value: boolean) => !value;
 // `pipe` or `flow`), write the function `isOdd` that checks if a number is
 // odd.
 
-export const isOddP: (value: number) => boolean = unimplemented;
+export const isOddP: (value: number) => boolean = (value) => pipe(value, (val) => val % 2 !== 0 ? true : false)
 
-export const isOddF: (value: number) => boolean = unimplemented;
+export const isOddF: (value: number) => boolean = (value) => flow((val : number) => val % 2 !== 0 ? true : false)(value)
 
 // We will write a function that for any given number, computes the next
 // one according to the following rules:
 // - if n is even => divide it by two
 // - if n is odd  => triple it and add one
-//
-// This sequence is the object of The Collatz conjecture: https://en.wikipedia.org/wiki/Collatz_conjecture
-//
-// Below is the functional equivalent of the control flow statement if-else.
-
 export const ifThenElse =
   <A>(onTrue: () => A, onFalse: () => A) =>
   (condition: boolean) =>
@@ -63,10 +59,22 @@ export const ifThenElse =
 // Using `pipe` and `ifThenElse`, write the function that computes the next step in the Collatz
 // sequence.
 
-export const next: (value: number) => number = unimplemented;
+export const next: (value: number) => number = (val) => pipe(
+  val, 
+  (val) => val % 2 === 0 ? true : false ,
+  ifThenElse(
+    () => val / 2, 
+    () => val * 3 + 1
+  ),
+) ;
+
 
 // Using only `flow` and `next`, write the function that for any given number
 // a_n from the Collatz sequence, returns the number a_n+3 (ie. the number
 // three steps ahead in the sequence).
 
-export const next3: (value: number) => number = unimplemented;
+export const next3: (value: number) => number = (val) => flow(
+  next,
+  next,  
+  next,  
+)(val)
