@@ -2,9 +2,12 @@
 // Let's have fun with combinators!
 
 import { Either } from 'fp-ts/Either';
+import * as E from 'fp-ts/Either';
 import { Option } from 'fp-ts/Option';
+import * as O from 'fp-ts/Option';
 import { Failure } from '../Failure';
 import { unimplemented } from '../utils';
+import { pipe } from 'fp-ts/lib/function';
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                   SETUP                                   //
@@ -117,9 +120,44 @@ export const invalidTargetFailure = Failure.builder(
 // common operations done with the `Either` type and it is available through
 // the `chain` operator and its slightly relaxed variant `chainW`.
 
+function checkOR(char : Character) {
+  return isWarrior(char) || isArcher(char) || isWarrior(char)
+}
+
 export const checkTargetAndSmash: (
   target: Option<Character>,
-) => Either<NoTargetFailure | InvalidTargetFailure, Damage> = unimplemented;
+) => Either<NoTargetFailure | InvalidTargetFailure, Damage> = 
+  (target) => {
+
+  pipe(
+      target,
+      O.fold(
+        (a) => E.left("asdf"),
+        (a) => E.right("1234")
+      ),
+      // O.fromNullable,
+      // O.map(checkOR),
+      // E.fromPredicate(
+      //   isWarrior,
+      //   () => isArcher,
+      // ),
+  )
+
+  pipe(
+    target,
+    O.map(isWarrior),
+  )
+  // isWarrior(target)
+  // switch (target) {
+  //   case isWarrior(target):
+      
+  //     break;
+  
+  //   default:
+  //     break;
+  // }
+  // E.left<NoTargetFailure>(noTargetFailure)
+}
 
 export const checkTargetAndBurn: (
   target: Option<Character>,

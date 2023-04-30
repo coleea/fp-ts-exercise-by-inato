@@ -94,7 +94,6 @@ export const asyncSafeDivideWithError: (
 ) => TaskEither<DivisionByZeroError, number> = 
     (a,b) =>
     TE.tryCatch(
-      // () => (b === 0 ) ? (throw "Error: Division by zero") : Promise.resolve(a/b),
       () => {
         if (b === 0 ) {
           throw "Error: Division by zero"
@@ -103,17 +102,4 @@ export const asyncSafeDivideWithError: (
         }
       }, 
       (reason) => "Error: Division by zero" as const
-      // reason => TE.left<DivisionByZeroError>(reason)
     )
-
-// TE.tryCatch(
-//   () => Promise.resolve(1), 
-//   String
-// )().then(result => {
-//   assert.deepStrictEqual(result, right(1))
-// })
-
-      // (reason) =>  reason,
-    // (a,b) => b === 0 
-    // ? TE.left<DivisionByZeroError>(DivisionByZero) 
-    // : TE.right(a/b)
