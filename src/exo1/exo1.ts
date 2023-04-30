@@ -1,13 +1,10 @@
-// `fp-ts` training Exercise 1
-// Basic types:
-// - Option
-// - Either
-// - TaskEither
-
 import { Either } from 'fp-ts/Either';
+import * as E from 'fp-ts/Either';
 import { Option } from 'fp-ts/Option';
+import * as O from 'fp-ts/Option';
 import { TaskEither } from 'fp-ts/TaskEither';
 import { unimplemented, sleep, unimplementedAsync } from '../utils';
+// import { pipe } from 'fp-ts/lib/function';
 
 export const divide = (a: number, b: number): number => {
   return a / b;
@@ -25,7 +22,13 @@ export const divide = (a: number, b: number): number => {
 // - `option.none`
 
 export const safeDivide: (a: number, b: number) => Option<number> =
-  unimplemented;
+  (a,b) => b === 0 ? O.none : O.some(a/b)
+  // pipe(
+    // b,    
+    // O.fromPredicate((b) => b === 0),
+    // O.map(_ => a / b)
+    // (z) => a /b 
+  // }
 
 
 // You probably wrote `safeDivide` using `if` statements and it's perfectly valid!
@@ -60,7 +63,10 @@ export const DivisionByZero = 'Error: Division by zero' as const;
 export const safeDivideWithError: (
   a: number,
   b: number,
-) => Either<DivisionByZeroError, number> = unimplemented;
+) => Either<DivisionByZeroError, number> = (a,b) => b === 0 
+                                                    ? E.left<DivisionByZeroError>(DivisionByZero) 
+                                                    : E.right(a/b)
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                TASKEITHER                                 //
