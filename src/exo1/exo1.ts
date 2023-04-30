@@ -2,6 +2,7 @@ import { Either } from 'fp-ts/Either';
 import * as E from 'fp-ts/Either';
 import { Option } from 'fp-ts/Option';
 import * as O from 'fp-ts/Option';
+import * as TE from 'fp-ts/TaskEither';
 import { TaskEither } from 'fp-ts/TaskEither';
 import { unimplemented, sleep, unimplementedAsync } from '../utils';
 // import { pipe } from 'fp-ts/lib/function';
@@ -76,11 +77,7 @@ export const safeDivideWithError: (
 // (throwing an error when the denominator is 0)
 export const asyncDivide = async (a: number, b: number) => {
   await sleep(1000);
-
-  if (b === 0) {
-    throw new Error('BOOM!');
-  }
-
+  if (b === 0) {throw new Error('BOOM!');}
   return a / b;
 };
 
@@ -94,4 +91,30 @@ export const asyncDivide = async (a: number, b: number) => {
 export const asyncSafeDivideWithError: (
   a: number,
   b: number,
-) => TaskEither<DivisionByZeroError, number> = unimplementedAsync;
+) => TaskEither<DivisionByZeroError, number> = 
+    (a,b) =>
+    TE.tryCatch(
+      () => {
+        if (b === 0 ) {
+          throw "Error: Division by zero"
+        } else {
+          return Promise.resolve(a/b)
+        }
+      }, 
+      (reason) => "Error: Division by zero" as const
+      // reason => TE.left<DivisionByZeroError>(reason)
+    )
+
+
+
+// TE.tryCatch(
+//   () => Promise.resolve(1), 
+//   String
+// )().then(result => {
+//   assert.deepStrictEqual(result, right(1))
+// })
+
+      // (reason) =>  reason,
+    // (a,b) => b === 0 
+    // ? TE.left<DivisionByZeroError>(DivisionByZero) 
+    // : TE.right(a/b)

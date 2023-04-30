@@ -66,7 +66,7 @@ describe('exo1', () => {
       expect(result).toStrictEqual(either.right(5));
     });
 
-    it('should eventually return either.left(DivisionByZero) if the denominator is zero', async () => {
+    it('should eventually return either.left(DivisionByZero) if th  e denominator is zero', async () => {
       const resultA = await asyncSafeDivideWithError(25, 0)();
       const resultB = await asyncSafeDivideWithError(-25, 0)();
 
